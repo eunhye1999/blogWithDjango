@@ -1,0 +1,15 @@
+{% extends 'base_layout.html' %}    
+{% block content %}
+    <!-- <p>This blog is Empty</p> -->
+    {% if list %}
+        <ul>
+            {% for item in list %}
+                <li>{{item.title}}</li>date : {{item.created_at}} <a href="{% url 'blog:detail' item.id %}">Readmore</a>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>This blog is Empty</p>
+    {% endif %}
+
+{% endblock %}

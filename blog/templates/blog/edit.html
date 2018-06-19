@@ -1,0 +1,19 @@
+{% extends 'base_layout.html' %}    
+{% block content %}
+<div>
+    <h1>Edit</h1>
+    <form action="{% url 'blog:edited' blog.id %}" method="post">
+            {% csrf_token %}
+            <p>Title</p>
+                <input type="text" name="title" value="{{ blog.title }}"><br>
+            <p>Content</p>
+                <textarea name="content" rows="4" cols="20" >
+                        {{ blog.content }}
+                </textarea>
+            <br>
+            <input type="submit" value="Edit">
+            <a href="{% url 'blog:detail' blog.id %}">Back</a>
+    </form>
+</div>
+    
+{% endblock %}
