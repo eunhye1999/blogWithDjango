@@ -6,8 +6,7 @@ from django.urls import reverse
 from .models import Blog
 
 def index(request):
-    list_title = Blog.objects.order_by('created_at')
-    # print(list_title)
+    list_title = Blog.objects.order_by('-created_at')
     return render(request, 'blog/index.html', {'list' : list_title})
 
 def addForm(request):
@@ -40,11 +39,8 @@ def editedCon(request,pk):
         blog.title = request.POST['title']
         blog.content = request.POST['content']
         blog.save()
-        return HttpResponseRedirect('/blog')
+        return HttpResponseRedirect(reverse('blog:index'))
     
-
-    
-
 def addCon(request):
     print('addCon')
     try:
@@ -55,4 +51,15 @@ def addCon(request):
         pass
     else:
         blog.save()
-        return HttpResponseRedirect('/blog')
+        return HttpResponseRedirect(reverse('blog:index'))
+
+def deleteCon(request,pk):
+    print("deleteCon")
+    try:
+        blog = Blog.objects.get(pk=pk)
+    except (KeyError):
+        pass
+    else:
+        blog.delete()
+        # blog.save()
+        return HttpResponseRedirect(reverse('blog:index'))

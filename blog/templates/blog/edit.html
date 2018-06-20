@@ -11,8 +11,9 @@
                         {{ blog.content }}
                 </textarea>
             <br>
-            <input type="submit" value="Edit">
             <a href="{% url 'blog:detail' blog.id %}">Back</a>
+            <input type="submit" value="Edit">
+            <button><a href="{% url 'blog:delete' blog.id %}">Delete</a></button>
     </form>
 </div>
     

@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/', views.detail, name='detail'),
     path('<int:pk>/edit/', views.editCon, name='edit'),
     path('<int:pk>/edited/', views.editedCon , name='edited'),
+    path('<int:pk>/edit/delete/', views.deleteCon,name='delete'),
 ]
