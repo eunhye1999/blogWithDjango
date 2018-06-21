@@ -32,18 +32,37 @@ def addForm(request):
     return render(request, 'blog/formAddCon.html' , {'state' :  edit ,'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}} )
 
 def detail(request,pk):
-
+    # can Edot Content
     blog = get_object_or_404(Blog, pk=pk)
-    user_check = get_object_or_404(User, pk=blog.user_id) # get name user
+    user_check = get_object_or_404(User, pk=blog.user_id) # get name user form blog
     if((request.user.has_perm('blog.change_blog') and str(user_check.username) == str(request.user)) or 'admin' == str(request.user)):
         edit = True
     else:
         edit = False
 
-    print('blog.user_id :', blog.user_id)
-    print('blog.title :',blog.title)
-    print('blog.title :',blog.content)
-    return render(request, 'blog/detail.html', {'blog': blog, 'credit':user_check.username ,'edit': edit, 'user':{ 'user_name': request.user ,'status_login': sessionResult(request)}})
+    data = {
+        'blog': blog, 
+        'credit':user_check.username ,
+        'edit': edit,
+        'user':{
+            'user_name': request.user ,
+            'status_login': sessionResult(request)
+            },
+        'user_delete_comment' : 0,
+        'comment': False
+        }
+        
+    # can Edot Comment
+    if request.session.keys():
+        data['comment'] = True
+        if 'admin' == str(request.user):
+            data['user_delete_comment'] = True
+        elif request.user.has_perm('blog.delete_comment'):
+            data['user_delete_comment'] = int(request.session['_auth_user_id'])
+            
+            
+    print(data['user_delete_comment'])
+    return render(request, 'blog/detail.html', data)
 
 def editCon(request,pk):
     print('editCon')
