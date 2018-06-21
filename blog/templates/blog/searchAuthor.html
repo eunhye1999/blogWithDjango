@@ -1,0 +1,16 @@
+{% extends 'base_layout.html' %}    
+{% block content %}
+    <!-- <p>This blog is Empty</p> -->
+    
+    {% if list %}
+        <h1>Author : {{author}}</h1>
+        <ul>
+            {% for blog in list %}
+                <li><a  href="{% url 'blog:detail' blog.id %}">{{blog.title}}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No result</p>
+    {% endif %}
+
+{% endblock %}

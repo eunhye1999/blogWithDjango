@@ -13,4 +13,7 @@ urlpatterns = [
     path('<int:pk>/edit/delete/', views.deleteCon, name='delete'),
 
     path('<int:blog_id>/comment', views.addcomment, name='comment'),
+
+    path('search/<str:search>', views.searchAuthor, name='searched'),
+    path('search/', views.search, name='search'),
 ]

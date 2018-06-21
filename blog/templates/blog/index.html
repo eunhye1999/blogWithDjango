@@ -3,6 +3,10 @@
     <!-- <p>This blog is Empty</p> -->
     <h1>Home</h1>
     {% if list %}
+        <!-- <form action="{% url 'blog:search' %}" method="post">
+            {% csrf_token %}
+                <input type="text" name="search"><input type="submit" value="search">
+        </form> -->
         <ul>
             {% if user.status_login %}
                 <button><a href="{% url 'blog:addForm' %}">AddContent</a></button>

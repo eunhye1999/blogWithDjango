@@ -97,3 +97,32 @@ def addcomment(request,blog_id):
     else:
         return HttpResponseRedirect(reverse('blog:index'))
 
+def search(request):
+    print("search")
+    if(request.method == "POST"):
+        if(request.POST['search'] == ''):
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            # user_check = get_object_or_404(User, username=request.POST['search'])
+            # print(user_check.id)
+            # blog = Blog.objects.all().filter(user_id=user_check.id)
+            # blog.objects.all()
+            # print('asedasdasdasasdsadasddas')
+            # print(blog)
+            # print('asedasdasdasdas')
+            # for blog in blog:
+            #     print(blog)
+            return HttpResponseRedirect(reverse('blog:searched', args=(request.POST['search'],)))
+    else:
+        return HttpResponseRedirect(reverse('blog:index'))
+
+def searchAuthor(request, search):
+    print("searchAuthor")
+    try:
+        user_check = get_object_or_404(User, username=search)
+        blog = Blog.objects.all().filter(user_id=user_check.id)
+        return render(request, 'blog/searchAuthor.html', {'list' : blog, 'author':search, 'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
+    except:
+        print('ssadasd')
+        return render(request, 'blog/searchAuthor.html', {'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
+    

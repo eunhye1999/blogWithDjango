@@ -19,7 +19,7 @@
   <body>
       <div>
         <hr>
-        <a href="{% url 'blog:index' %}">Logo</a>
+        <h1><a href="{% url 'blog:index' %}">Logo</a></h1>
         {% if user.status_login %}
           <!-- <a href="{% url 'blog:addForm' %}">AddContent</a> -->
           <a href="{% url 'account:logout' %}">Logout</a>
@@ -27,7 +27,14 @@
           <a href="{% url 'account:login' %}">Login</a>
           <a href="{% url 'account:register' %}">Register</a>
         {% endif %}
-        <hr>
+        <div align="center">
+          <hr>
+            <form action="{% url 'blog:search' %}" method="post">
+                {% csrf_token %}
+                    <input type="text" name="search"><input type="submit" value="search">
+            </form>
+          <hr>
+        </div>
         <div class="wrapper">
             {% block content %}
             {% endblock %}
