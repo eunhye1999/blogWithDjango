@@ -2,10 +2,10 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse 
 
-from django.contrib.auth.models import User
 # from django.views import generic
 
-from .models import Blog
+from django.contrib.auth.models import User
+from .models import Blog, Comment
 
 def sessionResult(request):
     if request.session.keys():
@@ -71,7 +71,7 @@ def addCon(request):
     try:
         print('add Title : ',request.POST['title'])
         print('add Content : ',request.POST['content'])
-        blog = Blog(title = request.POST['title'], content = request.POST['content'], user_id=request.session['_auth_user_id'] )
+        blog = Blog(title = request.POST['title'], content = request.POST['content'], user_id=request.session['_auth_user_id'])
     except (KeyError):
         pass
     else:
@@ -86,5 +86,14 @@ def deleteCon(request,pk):
         pass
     else:
         blog.delete()
-        # blog.save()
         return HttpResponseRedirect(reverse('blog:index'))
+
+def addcomment(request,blog_id):
+    print("addcomment")
+    if(request.method == "POST"):
+        comment = Comment(content_id=blog_id,  comment= request.POST['comment'], user_id=request.session['_auth_user_id'])
+        comment.save()
+        return HttpResponseRedirect(reverse('blog:detail', args=(blog_id,)))
+    else:
+        return HttpResponseRedirect(reverse('blog:index'))
+

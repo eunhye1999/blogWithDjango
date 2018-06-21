@@ -9,8 +9,24 @@
     {% if edit %}
         <a href="{% url 'blog:edit' blog.id %}">Edit</a>
     {% endif %}
-
     <p>Credit : {{credit}}</p>
+    <br>
+
+    <ul>
+    {% for comment in blog.comment_set.all %}    
+        <li style="font-weight: bold">{{ comment.comment }}</li>user id : {{ comment.user_id }}
+    {% endfor %}
+
+    {% if edit %}
+    </ul>    
+    <form action="{% url 'blog:comment' blog.id %}" method="post">
+        {% csrf_token %}
+            <p>Comment</p>
+                <textarea name="comment" rows="2" cols="20"></textarea>
+            <br>
+            <input type="submit" value="Comment">
+    </form>
+    {% endif %}
 </div>
     
 {% endblock %}
