@@ -4,6 +4,9 @@
     <h1>Home</h1>
     {% if list %}
         <ul>
+            {% if user.status_login %}
+                <button><a href="{% url 'blog:addForm' %}">AddContent</a></button>
+            {% endif %}
             {% for item in list %}
                 <li>{{item.title}}</li>date : {{item.created_at}} <a href="{% url 'blog:detail' item.id %}">Readmore</a>
 

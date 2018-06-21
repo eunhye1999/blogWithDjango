@@ -2,6 +2,7 @@
 {% block content %}
 <div align="center">
     <h1>Create</h1>
+    {% if state %}
         <form action="{% url 'blog:addCon' %}" method="post">
             {% csrf_token %}
                 <p>Title</p>
@@ -13,6 +14,9 @@
                 <br>
                 <input type="submit" value="Submit">
         </form>
+    {% else %}
+        <p> Can't Create Content</p>
+    {% endif %}
 </div>
     
 {% endblock %}

@@ -6,9 +6,11 @@
     <div>
         {{ blog.content }}
     </div>
-    <!-- <a href="/blog/{{ blog.id }}/edit/">Edit</a> -->
-    <a href="{% url 'blog:edit' blog.id %}">Edit</a>
-        
+    {% if edit %}
+        <a href="{% url 'blog:edit' blog.id %}">Edit</a>
+    {% endif %}
+
+    <p>Credit : {{credit}}</p>
 </div>
     
 {% endblock %}
