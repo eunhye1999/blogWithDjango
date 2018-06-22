@@ -14,13 +14,9 @@
 
     <ul>
     {% for comment in blog.comment_set.all %}
-        <!-- {% for userid in list_user %}
-            {% if userid.id == comment.user_id %}
-            {% endif %}
-        {% endfor %} -->
-        <li style="font-weight: bold">{{ comment.comment }}</li>user id : {{ comment.user_id }}
+        <li style="font-weight: bold">{{ comment.comment }}</li>name : {{ comment.user }}
         {% if user_delete_comment == comment.user_id or user_delete_comment == True %}
-            Edit
+            <a>delete</a>
         {% endif %}
     {% endfor %}
     </ul>
@@ -28,7 +24,8 @@
     <form action="{% url 'blog:comment' blog.id %}" method="post">
         {% csrf_token %}
             <p>Comment</p>
-                <textarea name="comment" rows="2" cols="20"></textarea>
+                <textarea name="comment" rows="4" cols="70"></textarea>
+            <br>
             <br>
             <input type="submit" value="Comment">
     </form>

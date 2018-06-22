@@ -14,6 +14,7 @@ def sessionResult(request):
         return False
 
 def index(request):
+
     if request.session.keys():
         login = True
     else: 

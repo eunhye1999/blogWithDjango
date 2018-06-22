@@ -12,12 +12,13 @@
                 <button><a href="{% url 'blog:addForm' %}">AddContent</a></button>
             {% endif %}
             {% for item in list %}
-                <li>{{item.title}}</li>date : {{item.created_at}} <a href="{% url 'blog:detail' item.id %}">Readmore</a>
+                <li style="font-weight: bold">{{item.title}}</li>date : {{item.created_at}} <a href="{% url 'blog:detail' item.id %}">Readmore</a>
 
             {% endfor %}
         </ul>
     {% else %}
         <p>This blog is Empty</p>
+        <button><a href="{% url 'blog:addForm' %}">AddContent</a></button>
     {% endif %}
 
 {% endblock %}
