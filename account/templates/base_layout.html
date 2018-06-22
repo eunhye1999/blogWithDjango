@@ -17,9 +17,9 @@
   </head>
 
   <body>
-      <div>
+      <div style="padding: 10px">
         <hr>
-        <h1><a href="{% url 'blog:index' %}">Logo</a></h1>
+        <h1><a href="{% url 'blog:index' %}">Unix Dev</a></h1>
         {% if user.status_login %}
           <!-- <a href="{% url 'blog:addForm' %}">AddContent</a> -->
           <a href="{% url 'account:logout' %}">Logout</a>
@@ -31,7 +31,7 @@
           <hr>
             <form action="{% url 'blog:search' %}" method="post">
                 {% csrf_token %}
-                    <input type="text" name="search"><input type="submit" value="search">
+                    Search : <input type="text" name="search"><input type="submit" value="search">
             </form>
           <hr>
         </div>

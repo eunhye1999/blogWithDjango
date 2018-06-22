@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from django.contrib.auth.models import User
 from .models import Blog, Comment
+from django.core.paginator import Paginator
 
 def sessionResult(request):
     if request.session.keys():
@@ -14,14 +15,14 @@ def sessionResult(request):
         return False
 
 def index(request):
-
-    if request.session.keys():
-        login = True
-    else: 
-        login = False
-        
+    print('index')
     list_title = Blog.objects.order_by('-created_at')
-    return render(request, 'blog/index.html', {'list' : list_title, 'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
+    paginator = Paginator(list_title, 5)
+
+    page = request.GET.get('page')
+    blogs = paginator.get_page(page)
+
+    return render(request, 'blog/index.html', {'list' : blogs, 'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
 
 def addForm(request):
     print('addForm')
@@ -150,34 +151,27 @@ def searchAuthor(request, search):
         }
         
     dictUser = {}
-    # try:
-    user_check = User.objects.filter(username__contains=search)
-    print(user_check)
-    for user in user_check:
-        dictBlog = {}
-        blogs = Blog.objects.all().filter(user_id=user.id)
-        if(blogs):
-            for blog in blogs:
-                dictBlog[str(blog.id)] = blog
-            dictUser[str(user)] = dictBlog
+    try:
+        user_check = User.objects.filter(username__contains=search)
+        print(user_check)
+        for user in user_check:
+            dictBlog = {}
+            blogs = Blog.objects.all().filter(user_id=user.id)
+            if(blogs):
+                for blog in blogs:
+                    dictBlog[str(blog.id)] = blog
+                dictUser[str(user)] = dictBlog
 
-    # print(dictUser)
-    # print(dictUser['tape']['22'])
-    # for user in dictUser:
-    #     print(user)
-    #     for  blog, value in dictUser[user].items() :
-    #         print(value)
-
-    data = {
-        'dictUser' : dictUser, 
-        'author':search, 
-        'user' : { 
-            'user_name': request.user ,
-            'status_login': sessionResult(request)
+        data = {
+            'dictUser' : dictUser, 
+            'author':search, 
+            'user' : { 
+                'user_name': request.user ,
+                'status_login': sessionResult(request)
+                }
             }
-        }
-    print('pass')
-    return render(request, 'blog/searchAuthor.html', data)
-    # except:
-    #     print('ssadasd')
-    #     return render(request, 'blog/searchAuthor.html', {'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
+        print('pass')
+        return render(request, 'blog/searchAuthor.html', data)
+    except:
+        print('ssadasd')
+        return render(request, 'blog/searchAuthor.html', {'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})

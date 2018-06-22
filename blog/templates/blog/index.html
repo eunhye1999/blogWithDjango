@@ -1,21 +1,31 @@
 {% extends 'base_layout.html' %}    
 {% block content %}
-    <!-- <p>This blog is Empty</p> -->
+
     <h1>Home</h1>
     {% if list %}
-        <!-- <form action="{% url 'blog:search' %}" method="post">
-            {% csrf_token %}
-                <input type="text" name="search"><input type="submit" value="search">
-        </form> -->
         <ul>
             {% if user.status_login %}
                 <button><a href="{% url 'blog:addForm' %}">AddContent</a></button>
             {% endif %}
             {% for item in list %}
                 <li style="font-weight: bold">{{item.title}}</li>date : {{item.created_at}} <a href="{% url 'blog:detail' item.id %}">Readmore</a>
-
             {% endfor %}
         </ul>
+        <br>
+        <div class="pagination" style="text-align: center; display: block;">
+            <a href="?page=1">first</a>
+            <div style="display: inline; padding-left: 30px; padding-right: 30px">
+                {% for i in list.paginator.page_range %}
+                    {% if list.number == i %} 
+                        <strong><a href="?page={{i}}">{{i}}</a></strong>
+                    {% else %}
+                        <a href="?page={{i}}">{{i}}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <a href="?page={{ list.paginator.num_pages }}">last</a>
+            
+        </div>
     {% else %}
         <p>This blog is Empty</p>
         <button><a href="{% url 'blog:addForm' %}">AddContent</a></button>
