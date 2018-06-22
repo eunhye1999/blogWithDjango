@@ -1,12 +1,15 @@
 {% extends 'base_layout.html' %}    
 {% block content %}
-    <!-- <p>This blog is Empty</p> -->
-    
-    {% if list %}
-        <h1>Author : {{author}}</h1>
+    <h3>Seact Author : {{author}}</h3>
+    {% if dictUser %}
         <ul>
-            {% for blog in list %}
-                <li><a  href="{% url 'blog:detail' blog.id %}">{{blog.title}}</a></li>
+            {% for user_i, value_i in dictUser.items %}
+                <li>{{ user_i }}</li>
+                <ul>
+                {% for id, title in value_i.items %}
+                    <li><a  href="{% url 'blog:detail' id %}">{{title}}</a></li>
+                {% endfor %}    
+                </ul> 
             {% endfor %}
         </ul>
     {% else %}

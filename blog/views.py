@@ -108,7 +108,7 @@ def deleteCon(request,pk):
         blog.delete()
         return HttpResponseRedirect(reverse('blog:index'))
 
-def addcomment(request,blog_id):
+def comment(request,blog_id):
     print("addcomment")
     if(request.method == "POST"):
         comment = Comment(content_id=blog_id,  comment= request.POST['comment'], user_id=request.session['_auth_user_id'])
@@ -117,32 +117,67 @@ def addcomment(request,blog_id):
     else:
         return HttpResponseRedirect(reverse('blog:index'))
 
+def delComment(request,blog_id,comment_id):
+    print("delComment")
+    try:
+        comment = Comment.objects.get(pk=comment_id)
+    except (KeyError):
+        pass
+    else:
+        comment.delete()
+        return HttpResponseRedirect(reverse('blog:detail', args=(blog_id,)))
+
+
 def search(request):
     print("search")
     if(request.method == "POST"):
         if(request.POST['search'] == ''):
             return HttpResponseRedirect(reverse('blog:index'))
         else:
-            # user_check = get_object_or_404(User, username=request.POST['search'])
-            # print(user_check.id)
-            # blog = Blog.objects.all().filter(user_id=user_check.id)
-            # blog.objects.all()
-            # print('asedasdasdasasdsadasddas')
-            # print(blog)
-            # print('asedasdasdasdas')
-            # for blog in blog:
-            #     print(blog)
             return HttpResponseRedirect(reverse('blog:searched', args=(request.POST['search'],)))
     else:
         return HttpResponseRedirect(reverse('blog:index'))
 
 def searchAuthor(request, search):
     print("searchAuthor")
-    try:
-        user_check = get_object_or_404(User, username=search)
-        blog = Blog.objects.all().filter(user_id=user_check.id)
-        return render(request, 'blog/searchAuthor.html', {'list' : blog, 'author':search, 'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
-    except:
-        print('ssadasd')
-        return render(request, 'blog/searchAuthor.html', {'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
-    
+    data = {
+        # 'list' : listEmp, 
+        'author':search, 
+        'user' : { 
+            'user_name': request.user ,
+            'status_login': sessionResult(request)
+            }
+        }
+        
+    dictUser = {}
+    # try:
+    user_check = User.objects.filter(username__contains=search)
+    print(user_check)
+    for user in user_check:
+        dictBlog = {}
+        blogs = Blog.objects.all().filter(user_id=user.id)
+        if(blogs):
+            for blog in blogs:
+                dictBlog[str(blog.id)] = blog
+            dictUser[str(user)] = dictBlog
+
+    # print(dictUser)
+    # print(dictUser['tape']['22'])
+    # for user in dictUser:
+    #     print(user)
+    #     for  blog, value in dictUser[user].items() :
+    #         print(value)
+
+    data = {
+        'dictUser' : dictUser, 
+        'author':search, 
+        'user' : { 
+            'user_name': request.user ,
+            'status_login': sessionResult(request)
+            }
+        }
+    print('pass')
+    return render(request, 'blog/searchAuthor.html', data)
+    # except:
+    #     print('ssadasd')
+    #     return render(request, 'blog/searchAuthor.html', {'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})

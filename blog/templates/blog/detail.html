@@ -16,7 +16,7 @@
     {% for comment in blog.comment_set.all %}
         <li style="font-weight: bold">{{ comment.comment }}</li>name : {{ comment.user }}
         {% if user_delete_comment == comment.user_id or user_delete_comment == True %}
-            <a>delete</a>
+            <a href="{% url 'blog:delcomment' blog.id  comment.id %}">delete</a>
         {% endif %}
     {% endfor %}
     </ul>

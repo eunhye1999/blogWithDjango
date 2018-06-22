@@ -7,9 +7,7 @@
             <p>Title</p>
                 <input type="text" name="title" value="{{ blog.title }}"><br>
             <p>Content</p>
-                <textarea name="content" rows="4" cols="20" >
-                        {{ blog.content }}
-                </textarea>
+                <textarea name="content" rows="4" cols="70" >{{ blog.content }}</textarea>
             <br>
             <a href="{% url 'blog:detail' blog.id %}">Back</a>
             <input type="submit" value="Edit">

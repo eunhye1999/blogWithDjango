@@ -12,7 +12,8 @@ urlpatterns = [
     path('<int:pk>/edited/', views.editedCon , name='edited'),
     path('<int:pk>/edit/delete/', views.deleteCon, name='delete'),
 
-    path('<int:blog_id>/comment', views.addcomment, name='comment'),
+    path('<int:blog_id>/comment', views.comment, name='comment'),
+    path('<int:blog_id>/comment/<int:comment_id>', views.delComment, name='delcomment'),
 
     path('search/<str:search>', views.searchAuthor, name='searched'),
     path('search/', views.search, name='search'),
