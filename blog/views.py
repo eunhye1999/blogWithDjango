@@ -8,6 +8,15 @@ from django.contrib.auth.models import User
 from .models import Blog, Comment
 from django.core.paginator import Paginator
 
+def auth_permission(request, permission):
+    print('auth_permission') 
+    result = False
+    if(request.user.has_perm(permission) or 'admin' == str(request.user)):
+        result = True
+    else:
+        result = False
+    return result 
+
 def sessionResult(request):
     if request.session.keys():
         return True
@@ -76,57 +85,73 @@ def editCon(request,pk):
 def editedCon(request,pk):
     print('editedCon')
     try:
-        print('edit Title : ',request.POST['title'])
-        print('edit Content : ',request.POST['content'])
+        result = auth_permission(request, 'blog.change_blog')
         blog = Blog.objects.get(pk=pk)
     except (KeyError):
         pass
     else:
-        blog.title = request.POST['title']
-        blog.content = request.POST['content']
-        blog.save()
-        return HttpResponseRedirect(reverse('blog:index'))
+        if(result):
+            blog.title = request.POST['title']
+            blog.content = request.POST['content']
+            blog.save()
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            return render(request, 'blog/errorPerm.html')
     
 def addCon(request):
     print('addCon')
     try:
+        result = auth_permission(request, 'blog.add_blog')
         print('add Title : ',request.POST['title'])
         print('add Content : ',request.POST['content'])
-        blog = Blog(title = request.POST['title'], content = request.POST['content'], user_id=request.session['_auth_user_id'])
     except (KeyError):
         pass
     else:
-        blog.save()
-        return HttpResponseRedirect(reverse('blog:index'))
+        if(result):
+            blog = Blog(title = request.POST['title'], content = request.POST['content'], user_id=request.session['_auth_user_id'])
+            blog.save()
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            return render(request, 'blog/errorPerm.html')
 
 def deleteCon(request,pk):
     print("deleteCon")
     try:
+        result = auth_permission(request, 'blog.delete_blog')
         blog = Blog.objects.get(pk=pk)
     except (KeyError):
         pass
     else:
-        blog.delete()
-        return HttpResponseRedirect(reverse('blog:index'))
+        if(result):
+            blog.delete()
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            print('asdsadasd')
+            return render(request, 'blog/errorPerm.html')
 
 def comment(request,blog_id):
     print("addcomment")
-    if(request.method == "POST"):
+    result = auth_permission(request, 'blog.add_comment')
+    if(request.method == "POST" and result == True):
         comment = Comment(content_id=blog_id,  comment= request.POST['comment'], user_id=request.session['_auth_user_id'])
         comment.save()
         return HttpResponseRedirect(reverse('blog:detail', args=(blog_id,)))
     else:
-        return HttpResponseRedirect(reverse('blog:index'))
+        return render(request, 'blog/errorPerm.html')
 
 def delComment(request,blog_id,comment_id):
     print("delComment")
     try:
+        result = auth_permission(request, 'blog.delete_comment')
         comment = Comment.objects.get(pk=comment_id)
     except (KeyError):
         pass
     else:
-        comment.delete()
-        return HttpResponseRedirect(reverse('blog:detail', args=(blog_id,)))
+        if(result): 
+            comment.delete()
+            return HttpResponseRedirect(reverse('blog:detail', args=(blog_id,)))
+        else:
+            return render(request, 'blog/errorPerm.html')
 
 
 def search(request):
@@ -138,6 +163,8 @@ def search(request):
             return HttpResponseRedirect(reverse('blog:searched', args=(request.POST['search'],)))
     else:
         return HttpResponseRedirect(reverse('blog:index'))
+
+
 
 def searchAuthor(request, search):
     print("searchAuthor")
@@ -175,3 +202,4 @@ def searchAuthor(request, search):
     except:
         print('ssadasd')
         return render(request, 'blog/searchAuthor.html', {'user' : { 'user_name': request.user ,'status_login': sessionResult(request)}})
+

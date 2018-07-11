@@ -44,8 +44,6 @@ def get_permission(perm):
 def register(request):
     if(request.method == "POST"):
         form = SignUpForm(request.POST)
-        # print('SAVE already')
-        # print(request.POST['perm'])
         
         if form.is_valid():
             form.save()
